@@ -1,0 +1,4 @@
+.DS_Store
+muskox.conf
+log/*.log
+script/*.pid

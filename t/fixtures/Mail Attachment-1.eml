@@ -1,0 +1,88 @@
+Received: from EXCH03.uni.au.dk (10.87.1.35) by SRVUNIHUB02.uni.au.dk
+ (10.88.2.7) with Microsoft SMTP Server (TLS) id 14.3.181.6; Tue, 3 Jun 2014
+ 07:03:27 +0200
+Received: from EXCH01.uni.au.dk (10.87.1.33) by Exch03.uni.au.dk (10.87.1.35)
+ with Microsoft SMTP Server (TLS) id 15.0.847.32; Tue, 3 Jun 2014 07:03:26
+ +0200
+Received: from mail165-co9-R.bigfish.com (207.46.163.16) by EXCH01.uni.au.dk
+ (10.87.1.33) with Microsoft SMTP Server (TLS) id 15.0.847.32 via Frontend
+ Transport; Tue, 3 Jun 2014 07:03:26 +0200
+Received: from mail165-co9 (localhost [127.0.0.1])	by
+ mail165-co9-R.bigfish.com (Postfix) with ESMTP id 4EA024C04B7	for
+ <Muskox@bios.au.dk>; Tue,  3 Jun 2014 05:03:23 +0000 (UTC)
+Received: from mail165-co9 (localhost.localdomain [127.0.0.1]) by mail165-co9
+ (MessageSwitch) id 1401771798412492_29511; Tue,  3 Jun 2014 05:03:18 +0000
+ (UTC)
+Received: from CO9EHSMHS017.bigfish.com (unknown [10.236.132.251])	by
+ mail165-co9.bigfish.com (Postfix) with ESMTP id D5B912C00DE	for
+ <Muskox@bios.au.dk>; Tue,  3 Jun 2014 05:03:10 +0000 (UTC)
+Received: from mail.televilt.se (194.236.218.203) by CO9EHSMHS017.bigfish.com
+ (10.236.130.27) with Microsoft SMTP Server (TLS) id 14.16.227.3; Tue, 3 Jun
+ 2014 05:03:09 +0000
+Received: from tvp-www ([194.236.218.208])	by mail.televilt.se
+ (mail.televilt.se)	(MDaemon PRO v11.0.3)	with ESMTP id md50001917887.msg	for
+ <Muskox@bios.au.dk>; Tue, 03 Jun 2014 07:03:04 +0200
+From: TVP - Tellus <tellusdata@televilt.se>
+To: "Muskox, Institut for Bioscience" <muskox@bios.au.dk>
+Subject: Tellus data from: T5HS-4024
+Thread-Topic: Tellus data from: T5HS-4024
+Thread-Index: AQHPfuknzeGBZa7I/UOajQ/8COrntA==
+Date: Tue, 3 Jun 2014 05:03:02 +0000
+Message-ID: <MDAEMON-F201406030703.AA0302331md50003397338@televilt.se>
+Content-Language: da-DK
+X-MS-Exchange-Organization-AuthAs: Anonymous
+X-MS-Exchange-Organization-AuthSource: Exch01.uni.au.dk
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator:
+x-spamscore: 2
+x-bigfish: vps2(zcb8kz936eIc85dhzz1f42h2148h1ee6h1de0h1d18h1fdah2073h2146h1202h1e76h2189h1d1ah1d2ah21bch1fc6h208chzz1de097hz2dh2a8h839he5bh1288h12a5h12bdh137ah139eh13eah1441h1504h1537h162dh1631h1758h1898h18e1h1946h19b5h1b0ah1bceh2222h224fh1d0ch1d2eh1d3fh1dc1h1dfeh1dffh1e1dh1e23h1fe8h1ff5h20f0h2218h2216h226dh22d0h24afh2336h2438h2461h2487h24d7h2516h2545h255eh25f6h2605h268bh26d3h27e2h282bh28a1h28b0h34h)
+Content-Type: multipart/mixed;
+	boundary="_002_MDAEMONF201406030703AA0302331md50003397338televiltse_"
+MIME-Version: 1.0
+
+--_002_MDAEMONF201406030703AA0302331md50003397338televiltse_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <673E4AC75899B1459E0060DEAB2A7EE8@uni.au.dk>
+Content-Transfer-Encoding: quoted-printable
+
+2014-06-03	07:00:04+0	8258540	549477	27X	(-)0
+
+Date	Time	TTF	Northing	Easting	Zone	SAT=B4s	2D/3D	Alt	H-DOP	Temp	X	Y=09
+2014-06-02	22:00:00	44	8258555	549366	27X	8	3D	   120	0.9	 13	  0	  0
+2014-06-02	23:00:00	30	8258568	549371	27X	6	3D	   123	1.1	  9	 16	  9
+2014-06-03	00:00:00	43	8258543	549411	27X	6	3D	    87	1.2	  7	 25	 18
+2014-06-03	01:00:00	30	8258491	549394	27X	5	3D	    90	1.4	  7	  0	  1
+2014-06-03	02:00:00	44	8258485	549399	27X	6	3D	   114	0.9	  8	  0	  0
+2014-06-03	03:00:00	30	8258525	549545	27X	6	3D	    98	1.0	  6	  1	  0
+2014-06-03	04:00:00	44	8258580	549505	27X	6	3D	   121	1.6	  6	  0	  0
+2014-06-03	05:00:00	30	8258564	549470	27X	7	3D	    94	1.0	  7	 14	  9
+
+
+
+
+
+
+--_002_MDAEMONF201406030703AA0302331md50003397338televiltse_
+Content-Type: text/plain; name="T5HS-4024_2014-06-03_050004.txt"
+Content-Description: T5HS-4024_2014-06-03_050004.txt
+Content-Disposition: attachment; filename="T5HS-4024_2014-06-03_050004.txt";
+	size=690; creation-date="Tue, 03 Jun 2014 05:03:27 GMT";
+	modification-date="Tue, 03 Jun 2014 05:03:27 GMT"
+Content-ID: <AC8B1E3F78E0044F83A8E62EC0365934@uni.au.dk>
+Content-Transfer-Encoding: base64
+
+MjAxNC0wNi0wMwkwNzowMDowNCswCTgyNTg1NDAJNTQ5NDc3CTI3WAkoLSkwDQoNCkRhdGUJVGlt
+ZQlUVEYJTm9ydGhpbmcJRWFzdGluZwlab25lCVNBVLRzCTJELzNECUFsdAlILURPUAlUZW1wCVgJ
+WQkNCjIwMTQtMDYtMDIJMjI6MDA6MDAJNDQJODI1ODU1NQk1NDkzNjYJMjdYCTgJM0QJICAgMTIw
+CTAuOQkgMTMJICAwCSAgMA0KMjAxNC0wNi0wMgkyMzowMDowMAkzMAk4MjU4NTY4CTU0OTM3MQky
+N1gJNgkzRAkgICAxMjMJMS4xCSAgOQkgMTYJICA5DQoyMDE0LTA2LTAzCTAwOjAwOjAwCTQzCTgy
+NTg1NDMJNTQ5NDExCTI3WAk2CTNECSAgICA4NwkxLjIJICA3CSAyNQkgMTgNCjIwMTQtMDYtMDMJ
+MDE6MDA6MDAJMzAJODI1ODQ5MQk1NDkzOTQJMjdYCTUJM0QJICAgIDkwCTEuNAkgIDcJICAwCSAg
+MQ0KMjAxNC0wNi0wMwkwMjowMDowMAk0NAk4MjU4NDg1CTU0OTM5OQkyN1gJNgkzRAkgICAxMTQJ
+MC45CSAgOAkgIDAJICAwDQoyMDE0LTA2LTAzCTAzOjAwOjAwCTMwCTgyNTg1MjUJNTQ5NTQ1CTI3
+WAk2CTNECSAgICA5OAkxLjAJICA2CSAgMQkgIDANCjIwMTQtMDYtMDMJMDQ6MDA6MDAJNDQJODI1
+ODU4MAk1NDk1MDUJMjdYCTYJM0QJICAgMTIxCTEuNgkgIDYJICAwCSAgMA0KMjAxNC0wNi0wMwkw
+NTowMDowMAkzMAk4MjU4NTY0CTU0OTQ3MAkyN1gJNwkzRAkgICAgOTQJMS4wCSAgNwkgMTQJICA5
+DQoNCg0K
+
+--_002_MDAEMONF201406030703AA0302331md50003397338televiltse_--
