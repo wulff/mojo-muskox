@@ -28,7 +28,7 @@ sub startup {
     ->via('GET')
     ->to('position#points');
 
-  $r->route('/v1/oxen/:animal/positions/lines', animal => qr/[\w\d]{4}-\d{4}/, format => [qw(json)])
+  $r->route('/v1/oxen/:animal/positions/lines', animal => qr/all|[\w\d]{4}-\d{4}/, format => [qw(json)])
     ->via('GET')
     ->to('position#lines');
 

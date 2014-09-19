@@ -142,18 +142,32 @@ sub points {
     features => [],
   };
 
-  my $search = {};
-  if ($self->stash('animal') ne 'all') {
-    $search->{animal_id} = $self->stash('animal');
-  }
+  my $count = $self->param('count');
+  $count = 0 unless $count && $count =~ /\d+/;
 
-  my $cursor = $self->db->resultset('Position')->search(
-    $search,
-    { columns => [ qw/animal_id recorded northing easting zone sat_count fix altitude h_dop temperature/ ],
-      order_by => { '-desc' => ['recorded'] },
-      rows => 10,
+  # we use different resultsets depending on whether we need data for all animals or just one.
+  my $cursor;
+  if ($self->stash('animal') eq 'all' and $count != 0) {
+    $cursor = $self->db->resultset('PositionGroup')->search(
+      {},
+      { bind => [$count], }
+    );
+  }
+  else {
+    my $search = {};
+    if ($self->stash('animal') ne 'all') {
+      $search->{animal_id} = $self->stash('animal');
     }
-  );
+
+    my $options = {
+      order_by => [ { '-asc' => ['animal_id']}, {'-desc' => ['recorded']} ],
+    };
+    if ($count > 0) {
+      $options->{rows} = $count;
+    }
+
+    $cursor = $self->db->resultset('Position')->search($search, $options);
+  }
 
   while (my $row = $cursor->next) {
     if ($row->easting > 0 and $row->northing) {
