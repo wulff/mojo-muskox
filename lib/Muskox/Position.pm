@@ -145,7 +145,6 @@ sub points {
   my $count = $self->param('count');
   $count = 0 unless $count && $count =~ /\d+/;
 
-  # we use different resultsets depending on whether we need data for all animals or just one.
   my $cursor;
   if ($self->stash('animal') eq 'all' and $count != 0) {
     $cursor = $self->db->resultset('PositionGroup')->search(
@@ -198,36 +197,70 @@ sub points {
 
 sub lines {
   my $self = shift;
+  my $geojson = {
+    type => 'FeatureCollection',
+    features => [],
+  };
 
-  my $cursor = $self->db->resultset('Position')->search(
-    { animal_id => $self->stash('animal') },
-    { columns => [ qw/animal_id northing easting zone/ ],
-      order_by => { '-desc' => ['recorded'] },
-      rows => 10,
+  my $count = $self->param('count');
+  if ($count && $count =~ /\d+/) {
+    $count++;
+  }
+  else {
+    $count = 0;
+  }
+
+  my $cursor;
+  if ($self->stash('animal') eq 'all' and $count != 0) {
+    $cursor = $self->db->resultset('PositionGroup')->search(
+      {},
+      { bind => [$count], }
+    );
+  }
+  else {
+    my $search = {};
+    if ($self->stash('animal') ne 'all') {
+      $search->{animal_id} = $self->stash('animal');
     }
-  );
+
+    my $options = {
+      order_by => [ { '-asc' => ['animal_id']}, {'-desc' => ['recorded']} ],
+    };
+    if ($count > 0) {
+      $options->{rows} = $count;
+    }
+
+    $cursor = $self->db->resultset('Position')->search($search, $options);
+  }
 
   my $positions = [];
+  my $current = '';
   while (my $row = $cursor->next) {
+    if ($current ne $row->animal_id) {
+      if (@$positions) {
+        my $feature = {
+          type => 'Feature',
+          geometry => {
+            type => 'LineString',
+            coordinates => $positions,
+          },
+          properties => {
+            animal_id => $current,
+          },
+        };
+
+        push @{$geojson->{features}}, $feature if $#{$positions} > 0;
+      }
+
+      $positions = [];
+      $current = $row->animal_id;
+    }
+
     if ($row->easting > 0 and $row->northing) {
       my ($latitude, $longitude) = utm_to_latlon(23, $row->zone, $row->easting, $row->northing);
       push @$positions, [$longitude, $latitude];
     }
   }
-
-  my $geojson = {
-    type => 'FeatureCollection',
-    features => [{
-      type => 'Feature',
-      geometry => {
-        type => 'LineString',
-        coordinates => $positions,
-      },
-      properties => {
-        animal_id => $self->stash('animal'),
-      },
-    }],
-  };
 
   $self->render(json => $geojson);
 }
