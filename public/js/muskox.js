@@ -54,4 +54,4 @@ $.getJSON('/v1/oxen/all/positions/lines.json?count=50', function(data) {
 });
 
 // Add a scale
-L.control.scale().addTo(map);
+L.control.scale({position: 'topright', imperial: false}).addTo(map);
