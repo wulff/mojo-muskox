@@ -3,6 +3,8 @@ Muskox
 
 A simple Mojolicious application which parses and stores GPS data from Televilt/FollowIt tracking collars.
 
+![Screenshot](https://raw.githubusercontent.com/wulff/mojo-muskox/master/public/img/screenshot.jpg)
+
 
 Endpoints
 ---------
