@@ -28,19 +28,19 @@ Examples
 
 Get a list of the names of all the animals in the database:
 
-    /v1/oxen/all/names
+    /v1/oxen/all/names.json
 
 Get all positions of all animals:
 
-    /v1/oxen/all/positions/points
+    /v1/oxen/all/positions/points.json
 
 Get the 10 latest positions of a specific animal:
 
-    /v1/oxen/T5HS-4024/positions/points?count=10
+    /v1/oxen/T5HS-4024/positions/points.json?count=10
 
 Get the full path of a specific animal:
 
-    /v1/oxen/T5HS-4024/positions/lines
+    /v1/oxen/T5HS-4024/positions/lines.json
 
 
 Missing data
