@@ -1,2 +1,3 @@
-% layout 'map';
+% layout 'default';
 % title 'Muskox';
+<div id="map"></div>
