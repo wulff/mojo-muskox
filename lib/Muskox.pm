@@ -23,7 +23,7 @@ sub startup {
 
   $r->route('/')->via('GET')->to('position#front');
 
-  $r->route('/v1/oxen/all/names', format => [qw(html json)])
+  $r->route('/v1/oxen/all/names', format => [qw(json)])
     ->via('GET')
     ->to('position#names');
 

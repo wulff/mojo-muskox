@@ -126,12 +126,7 @@ sub names {
     push @animals, $row->animal_id;
   }
 
-  if ($self->stash('format') eq 'html') {
-    $self->render('position/names', animals => [@animals]);
-  }
-  else {
-    $self->render(json => \@animals);
-  }
+  $self->render(json => \@animals);
 }
 
 sub points {
