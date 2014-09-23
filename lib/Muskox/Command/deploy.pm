@@ -9,8 +9,6 @@ has usage => "Usage: muskox deploy\n";
 sub run {
   my ($self, @args) = @_;
 
-  # for my $source_name ( $self->app->db->sources )
-
   eval { $self->app->db->resultset('Position')->count };
   if ($@) {
     $self->app->db->deploy();
@@ -22,6 +20,7 @@ sub run {
 }
 
 1;
+
 __END__
 
 =encoding utf8

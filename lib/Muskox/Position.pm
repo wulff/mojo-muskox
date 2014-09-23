@@ -37,6 +37,7 @@ our @column = (
   'status',
 );
 
+# render the front page map
 sub front {
   my $self = shift;
   $self->render();
@@ -110,12 +111,10 @@ sub create {
   }
 }
 
-sub interpolate {
-
-}
-
 sub names {
   my $self = shift;
+
+  # TODO: return more info on each animal for use on a /names.html page (e.g. last reported position)
 
   my $animals = $self->db->resultset('Position')->search(
     {},
@@ -137,10 +136,6 @@ sub names {
 
 sub points {
   my $self = shift;
-  my $geojson = {
-    type => 'FeatureCollection',
-    features => [],
-  };
 
   my $count = $self->param('count');
   $count = 0 unless $count && $count =~ /\d+/;
@@ -168,47 +163,64 @@ sub points {
     $cursor = $self->db->resultset('Position')->search($search, $options);
   }
 
+  my $points = [];
   while (my $row = $cursor->next) {
-    if ($row->easting > 0 and $row->northing) {
-      my ($latitude, $longitude) = utm_to_latlon(23, $row->zone, $row->easting, $row->northing);
-
-      my $feature = {
-        type => 'Feature',
-        geometry => {
-          type => 'Point',
-          coordinates => [$longitude, $latitude],
-        },
-        properties => {
-          animal_id => $row->animal_id,
-          recorded => $row->recorded,
-          sat_count => $row->sat_count,
-          fix => $row->fix,
-          altitude => $row->altitude,
-          temperature => $row->temperature,
-        }
-      };
-
-      push @{$geojson->{features}}, $feature;
+    my $point = {};
+    foreach my $column (@column) {
+      $point->{$column} = $row->$column;
     }
+    $self->_fix_point($point);
+    push @$points, $point;
   }
 
+  # TODO: perform some interpolation magic
+
+  my $geojson = $self->_render_points($points);
   $self->render(json => $geojson);
 }
 
-sub lines {
+sub _render_points {
   my $self = shift;
+  my $points = shift;
+
   my $geojson = {
     type => 'FeatureCollection',
     features => [],
   };
 
+  foreach my $point (@$points) {
+    my ($latitude, $longitude) = utm_to_latlon(23, $point->{zone}, $point->{easting}, $point->{northing});
+
+    my $feature = {
+      type => 'Feature',
+      geometry => {
+        type => 'Point',
+        coordinates => [$longitude, $latitude],
+      },
+      properties => {
+        animal_id => $point->{animal_id},
+        recorded => $point->{recorded},
+        sat_count => $point->{sat_count},
+        fix => $point->{fix},
+        altitude => $point->{altitude},
+        temperature => $point->{temperature},
+        northing => $point->{northing},
+        easting => $point->{easting},
+        interpolated => $point->{interpolated},
+      }
+    };
+
+    push @{$geojson->{features}}, $feature;
+  }
+
+  return $geojson;
+}
+
+sub lines {
+  my $self = shift;
+
   my $count = $self->param('count');
-  if ($count && $count =~ /\d+/) {
-    $count++;
-  }
-  else {
-    $count = 0;
-  }
+  $count += $count && $count =~ /\d+/ ? 1 : 0;
 
   my $cursor;
   if ($self->stash('animal') eq 'all' and $count != 0) {
@@ -233,36 +245,69 @@ sub lines {
     $cursor = $self->db->resultset('Position')->search($search, $options);
   }
 
-  my $positions = [];
-  my $current = '';
+  my $lines = {};
   while (my $row = $cursor->next) {
-    if ($current ne $row->animal_id) {
-      if (@$positions) {
-        my $feature = {
-          type => 'Feature',
-          geometry => {
-            type => 'LineString',
-            coordinates => $positions,
-          },
-          properties => {
-            animal_id => $current,
-          },
-        };
-
-        push @{$geojson->{features}}, $feature if $#{$positions} > 0;
-      }
-
-      $positions = [];
-      $current = $row->animal_id;
+    my $point = {};
+    foreach my $column (@column) {
+      $point->{$column} = $row->$column;
     }
-
-    if ($row->easting > 0 and $row->northing) {
-      my ($latitude, $longitude) = utm_to_latlon(23, $row->zone, $row->easting, $row->northing);
-      push @$positions, [$longitude, $latitude];
-    }
+    push @{$lines->{$row->animal_id}}, $point;
   }
 
+  my $geojson = $self->_render_lines($lines);
   $self->render(json => $geojson);
+}
+
+sub _render_lines {
+  my $self = shift;
+  my $lines = shift;
+
+  my $geojson = {
+    type => 'FeatureCollection',
+    features => [],
+  };
+
+  foreach my $animal_id (keys %$lines) {
+    my $positions = [];
+    foreach my $pos (@{$lines->{$animal_id}}) {
+      my ($latitude, $longitude) = utm_to_latlon(23, $pos->{zone}, $pos->{easting}, $pos->{northing});
+      push @$positions, [$longitude, $latitude, $pos->{easting}, $pos->{northing}];
+    }
+
+    my $feature = {
+      type => 'Feature',
+      geometry => {
+        type => 'LineString',
+        coordinates => $positions,
+      },
+      properties => {
+        animal_id => $animal_id,
+      },
+    };
+
+    push @{$geojson->{features}}, $feature if $#{$positions} > 0;
+  }
+
+  return $geojson;
+}
+
+sub _interpolate {
+  my $self = shift;
+  my $pos = shift;
+
+}
+
+sub _fix_point {
+  my $self = shift;
+  my $point = shift;
+
+  $point->{easting} += 0;
+  $point->{northing} += 0;
+  $point->{sat_count} += 0;
+  $point->{temperature} += 0;
+  $point->{altitude} += 0;
+
+  $point->{interpolated} = 0;
 }
 
 1;
