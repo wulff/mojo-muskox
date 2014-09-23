@@ -52,3 +52,6 @@ $.getJSON('/v1/oxen/all/positions/lines.json?count=50', function(data) {
   var bounds = geojsonTrackLayer.getBounds();
   map.fitBounds(bounds);
 });
+
+// Add a scale
+L.control.scale().addTo(map);
