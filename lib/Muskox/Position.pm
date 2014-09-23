@@ -274,6 +274,8 @@ sub _render_lines {
       push @$positions, [$longitude, $latitude, $pos->{easting}, $pos->{northing}];
     }
 
+    $self->_interpolate($positions);
+
     my $feature = {
       type => 'Feature',
       geometry => {
@@ -293,8 +295,40 @@ sub _render_lines {
 
 sub _interpolate {
   my $self = shift;
-  my $pos = shift;
+  my $positions = shift;
 
+  my $last = @$positions - 1;
+
+  my $right = 0;
+  for my $left (0 .. $last) {
+    if ($positions->[$left]->[2] == 0 and $positions->[$left]->[3] == 0) {
+      $right = $left;
+      while ($positions->[$right]->[2] == 0 and $positions->[$right]->[3] == 0) {
+        $right++;
+        last if $right > $last;
+      }
+      for my $j ($left .. $right - 1) {
+        if ($left > 0 and $right < $last) {
+          $positions->[$j]->[0] = $positions->[$left - 1]->[0] + (($positions->[$right]->[0] - $positions->[$left - 1]->[0]) / ($right - $left + 1) * ($j - $left + 1));
+          $positions->[$j]->[1] = $positions->[$left - 1]->[1] + (($positions->[$right]->[1] - $positions->[$left - 1]->[1]) / ($right - $left + 1) * ($j - $left + 1));
+        }
+        else {
+          if ($left == 0) {
+            # beginning of the array
+            $positions->[$j]->[0] = $positions->[$right]->[0];
+            $positions->[$j]->[1] = $positions->[$right]->[1];
+          }
+          else {
+            # end of the array
+            $positions->[$j]->[0] = $positions->[$left - 1]->[0];
+            $positions->[$j]->[1] = $positions->[$left - 1]->[1];
+          }
+        }
+      }
+    }
+  }
+
+  map { splice $_, 2 } @$positions;
 }
 
 sub _fix_point {
