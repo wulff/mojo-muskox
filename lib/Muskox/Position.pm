@@ -3,8 +3,6 @@ use Mojo::Base 'Mojolicious::Controller';
 use Mojo::JSON qw(decode_json);
 use Geo::Coordinates::UTM;
 
-use Data::Dumper;
-
 # precompile re's for validating position fields
 our @validate = (
   qr/^\d{4}-\d{2}-\d{2}$/,
@@ -270,26 +268,26 @@ sub _render_lines {
   };
 
   foreach my $animal_id (keys %$lines) {
-    my $positions = [];
-    foreach my $pos (@{$lines->{$animal_id}}) {
-      my ($latitude, $longitude) = utm_to_latlon(23, $pos->{zone}, $pos->{easting}, $pos->{northing});
-      push @$positions, [$longitude, $latitude, $pos->{easting}, $pos->{northing}];
+    my $points = [];
+    foreach my $point (@{$lines->{$animal_id}}) {
+      my ($latitude, $longitude) = utm_to_latlon(23, $point->{zone}, $point->{easting}, $point->{northing});
+      push @$points, [$longitude, $latitude, $point->{easting}, $point->{northing}];
     }
 
-    $self->_interpolate($positions);
+    $self->_interpolate($points);
 
     my $feature = {
       type => 'Feature',
       geometry => {
         type => 'LineString',
-        coordinates => $positions,
+        coordinates => $points,
       },
       properties => {
         animal_id => $animal_id,
       },
     };
 
-    push @{$geojson->{features}}, $feature if $#{$positions} > 0;
+    push @{$geojson->{features}}, $feature if $#{$points} > 0;
   }
 
   return $geojson;
