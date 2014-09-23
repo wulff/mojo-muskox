@@ -1,14 +1,6 @@
 // Create the map
 var map = L.map('map');
 
-// Create the basic tile layer using tiles from OpenStreetMap
-// var tiles = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-//   attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-//   minZoom: 6,
-//   maxZoom: 17,
-//   detectRetina: true
-// });
-
 // Create a tile layer based on sat/map tiles from MapQuest
 var tiles = L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
   attribution: 'Tiles by <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
@@ -18,7 +10,7 @@ var tiles = L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.j
   subdomains: '1234'
 });
 
-map.addLayer(tiles).setView([74.4507, -20.550], 9);
+map.addLayer(tiles);
 
 var geojsonTrackLayer = L.geoJson(null, {
   style: function (feature) {
@@ -56,4 +48,7 @@ $.getJSON('/v1/oxen/all/positions/points.json?count=1', function(data) {
 $.getJSON('/v1/oxen/all/positions/lines.json?count=50', function(data) {
   geojsonTrackLayer.addData(data);
   geojsonTrackLayer.addTo(map);
+
+  var bounds = geojsonTrackLayer.getBounds();
+  map.fitBounds(bounds);
 });
