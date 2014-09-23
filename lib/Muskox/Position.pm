@@ -173,29 +173,35 @@ sub points {
     push @$points, $point;
   }
 
-  # TODO: perform some interpolation magic
-
   my $geojson = $self->_render_points($points);
   $self->render(json => $geojson);
 }
 
 sub _render_points {
   my $self = shift;
-  my $points = shift;
+  my $data = shift;
 
   my $geojson = {
     type => 'FeatureCollection',
     features => [],
   };
 
-  foreach my $point (@$points) {
+  my $points = [];
+  foreach my $point (@$data) {
     my ($latitude, $longitude) = utm_to_latlon(23, $point->{zone}, $point->{easting}, $point->{northing});
+    push @$points, [$longitude, $latitude, $point->{easting}, $point->{northing}];
+  }
 
+  $self->_interpolate($points);
+
+  my $last = @$data - 1;
+  for my $i (0 .. $last) {
+    my $point = $data->[$i];
     my $feature = {
       type => 'Feature',
       geometry => {
         type => 'Point',
-        coordinates => [$longitude, $latitude],
+        coordinates => [$points->[$i]->[0], $points->[$i]->[1]],
       },
       properties => {
         animal_id => $point->{animal_id},
@@ -260,16 +266,16 @@ sub lines {
 
 sub _render_lines {
   my $self = shift;
-  my $lines = shift;
+  my $data = shift;
 
   my $geojson = {
     type => 'FeatureCollection',
     features => [],
   };
 
-  foreach my $animal_id (keys %$lines) {
+  foreach my $animal_id (keys %$data) {
     my $points = [];
-    foreach my $point (@{$lines->{$animal_id}}) {
+    foreach my $point (@{$data->{$animal_id}}) {
       my ($latitude, $longitude) = utm_to_latlon(23, $point->{zone}, $point->{easting}, $point->{northing});
       push @$points, [$longitude, $latitude, $point->{easting}, $point->{northing}];
     }
