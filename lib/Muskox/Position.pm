@@ -3,6 +3,8 @@ use Mojo::Base 'Mojolicious::Controller';
 use Mojo::JSON qw(decode_json);
 use Geo::Coordinates::UTM;
 
+use Data::Dumper;
+
 # precompile re's for validating position fields
 our @validate = (
   qr/^\d{4}-\d{2}-\d{2}$/,
@@ -114,19 +116,24 @@ sub create {
 sub names {
   my $self = shift;
 
-  # TODO: return more info on each animal for use on a /names.html page (e.g. last reported position)
-
-  my $animals = $self->db->resultset('Position')->search(
+  my $cursor = $self->db->resultset('Position')->search(
     {},
-    { columns => [ qw/animal_id/ ], group_by => [ qw/animal_id/ ] }
+    {
+      columns => [ 'animal_id', 'recorded', { count => 'id' } ],
+      group_by => [ qw/animal_id/ ],
+      order_by => { -desc => 'recorded' }
+    }
   );
 
-  my @animals;
-  while (my $row = $animals->next) {
-    push @animals, $row->animal_id;
+  my $names = {};
+  while (my $row = $cursor->next) {
+    $names->{$row->animal_id} = {
+      'positions' => int($row->get_column('count')),
+      'latest' => $row->recorded,
+    };
   }
 
-  $self->render(json => \@animals);
+  $self->render(json => $names);
 }
 
 sub points {
