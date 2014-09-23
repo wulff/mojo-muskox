@@ -18,9 +18,6 @@ var tiles = L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.j
   subdomains: '1234'
 });
 
-// Create a tile layer based on satellite imagery from Google
-// var tiles = new L.Google('SATELLITE');
-
 map.addLayer(tiles).setView([74.4507, -20.550], 9);
 
 var geojsonTrackLayer = L.geoJson(null, {
@@ -56,7 +53,7 @@ $.getJSON('/v1/oxen/all/positions/points.json?count=1', function(data) {
   geojsonPointLayer.addTo(map);
 });
 
-$.getJSON('/v1/oxen/all/positions/lines.json?count=25', function(data) {
+$.getJSON('/v1/oxen/all/positions/lines.json?count=50', function(data) {
   geojsonTrackLayer.addData(data);
   geojsonTrackLayer.addTo(map);
 });
