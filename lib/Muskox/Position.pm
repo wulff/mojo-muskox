@@ -212,7 +212,6 @@ sub _render_points {
         temperature => $point->{temperature},
         northing => $point->{northing},
         easting => $point->{easting},
-        interpolated => $point->{interpolated},
       }
     };
 
