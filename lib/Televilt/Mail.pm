@@ -6,8 +6,6 @@ use Modern::Perl;
 
 our @EXPORT_OK = qw(parse_subject parse_body);
 
-our $zone = '27X';
-
 # precompile re's for validating position fields
 our @validate = (
   qr/^\d{4}-\d{2}-\d{2}$/,
@@ -72,8 +70,6 @@ sub parse_body {
         carp("Unable to parse field #$i ($column[$i]): $fields[$i]");
       }
     }
-
-    $parsed[5] = $zone unless $parsed[5];
 
     my %row = (
       'recorded' => $parsed[0] . ' ' . $parsed[1],
