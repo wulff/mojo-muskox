@@ -213,9 +213,25 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+=head1 UNIQUE CONSTRAINTS
 
-# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-06-17 09:16:58
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:N12jtTavmE7qF5MnzVlVxA
+=head2 C<animal_time>
+
+=over 4
+
+=item * L</animal_id>
+
+=item * L</recorded>
+
+=back
+
+=cut
+
+__PACKAGE__->add_unique_constraint("animal_time", ["animal_id", "recorded"]);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2014-09-24 11:33:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/mZLA8Sm97w28d0nOiZDsg
 
 sub sqlt_deploy_hook {
   my ($self, $sqlt_table) = @_;
