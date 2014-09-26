@@ -8,19 +8,19 @@ our @EXPORT_OK = qw(parse_subject parse_body);
 
 # precompile re's for validating position fields
 our @validate = (
-  qr/^\d{4}-\d{2}-\d{2}$/,
-  qr/^\d{2}:\d{2}:\d{2}$/,
-  qr/^\d+$/,
-  qr/^\d+$/,
-  qr/^\d+$/,
-  qr/^\d{2}\w$/,
-  qr/^\d+$/,
-  qr/^2D$|^3D$/,
-  qr/^-*\d+$/,
-  qr/^\d+\.\d+$/,
-  qr/^\d+$/,
-  qr/^\d+$/,
-  qr/^\d+$/,
+  qr/^\d{4}-\d{2}-\d{2}$/, # date
+  qr/^\d{2}:\d{2}:\d{2}$/, # time
+  qr/^\d+$/,               # ttf
+  qr/^\d+$/,               # northing
+  qr/^\d+$/,               # easting
+  qr/^\d{2}\w$/,           # zone
+  qr/^\d+$/,               # sat_count
+  qr/^2D$|^3D$/,           # fix
+  qr/^\-*\d+$/,            # altitude
+  qr/^\d+\.\d+$/,          # h_dop
+  qr/^\-*\d+$/,            # temperature
+  qr/^\d+$/,               # x
+  qr/^\d+$/,               # y
 );
 
 our @column = (
@@ -60,6 +60,11 @@ sub parse_body {
 
     my @fields = split /\s+/;
     my @parsed = ();
+
+    # in some cases, the altitude is missing from the input data - mark it zero
+    if ($#fields == 11) {
+      splice @fields, 8, 0, ('0');
+    }
 
     my $last = (/GPS Time Out/ or /Mortality/) ? 1 : $#fields;
     for my $i (0 .. $last) {
