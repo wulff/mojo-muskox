@@ -102,12 +102,22 @@ sub create {
 
   if (@rows) {
     foreach my $row (@rows) {
-      $self->db->resultset('Position')->create($row);
+      my $rec = $self->db->resultset('Position')->find_or_new($row, {key => 'animal_time'});
+      my $key = $row->{'animal_id'} . ' ' . $row->{'recorded'};
+
+      if (!$rec->in_storage) {
+        $rec->insert;
+        $self->app->log->info('Added position: ' . $key);
+      }
+      else {
+        $self->app->log->info('Duplicate position: ' . $key);
+      }
     }
     $self->render(json => {status => 'OK', message => 'Positions added to the database.'}, status => 201);
   }
   else {
-    $self->render(json => {status => 'ERROR', message => 'Unable to parse e-mail. See log for details.'}, status => 201);
+    $self->app->log->error('Unable to parse e-mail: ' . $self->req->body);
+    $self->render(json => {status => 'ERROR', message => 'Unable to parse e-mail. See log for details.'}, status => 500);
   }
 }
 
@@ -345,8 +355,6 @@ sub _fix_point {
   $point->{sat_count} += 0;
   $point->{temperature} += 0;
   $point->{altitude} += 0;
-
-  $point->{interpolated} = 0;
 }
 
 1;
