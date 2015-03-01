@@ -198,6 +198,8 @@ sub _render_points {
 
   my $points = [];
   foreach my $point (@$data) {
+    # only accept UTM coordinates from the regular latitude bands
+    next unless $point->{zone} =~ /[CDEFGHJKLMNPQRSTUVWX]$/;
     my ($latitude, $longitude) = utm_to_latlon(23, $point->{zone}, $point->{easting}, $point->{northing});
     push @$points, [$longitude, $latitude, $point->{easting}, $point->{northing}];
   }
@@ -285,6 +287,8 @@ sub _render_lines {
   foreach my $animal_id (keys %$data) {
     my $points = [];
     foreach my $point (@{$data->{$animal_id}}) {
+      # only accept UTM coordinates from the regular latitude bands
+      next unless $point->{zone} =~ /[CDEFGHJKLMNPQRSTUVWX]$/;
       my ($latitude, $longitude) = utm_to_latlon(23, $point->{zone}, $point->{easting}, $point->{northing});
       push @$points, [$longitude, $latitude, $point->{easting}, $point->{northing}];
     }
