@@ -53,6 +53,12 @@ Values for these events will be interpolated when you use the web service endpoi
 The tracking collar is able to report the death of an animal. These events are marked as 'mortality' in the *status* column of the *position* table, but they are not currently handled by the web services.
 
 
+Notes
+-----
+
+The code only supports UTM coordinates in the regular latitude bands C-X. This is due to a limitation in the library used to convert from UTM coordinates to latitude and longitude.
+
+
 Muskox
 ------
 
