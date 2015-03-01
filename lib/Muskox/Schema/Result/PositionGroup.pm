@@ -13,13 +13,15 @@ __PACKAGE__->table('position');
 __PACKAGE__->result_source_instance->is_virtual(1);
 
 __PACKAGE__->result_source_instance->view_definition(q[
-  SELECT p.* FROM position p
-  LEFT OUTER JOIN position p2 ON p.animal_id = p2.animal_id
-    AND p.recorded <= p2.recorded
-  WHERE p2.northing <> 0 AND p2.easting <> 0
-  GROUP BY p.id
-  HAVING COUNT(*) <= ?
-  ORDER BY p.animal_id, p.recorded DESC
+  SET @num := 0, @animal_id := '';
+  SELECT * FROM (
+    SELECT *,
+      @num := IF(@animal_id = animal_id, @num + 1, 1) AS row_number,
+      @animal_id := animal_id AS foo
+    FROM position
+    ORDER BY animal_id, recorded DESC
+  ) AS positions
+  WHERE positions.row_number <= ?;
 ]);
 
 __PACKAGE__->add_columns(
