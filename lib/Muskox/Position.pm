@@ -152,9 +152,12 @@ sub points {
 
   my $cursor;
   if ($self->stash('animal') eq 'all' and $count != 0) {
+    $self->db->storage->dbh_do(sub {
+      my ($storage, $dbh) = @_;
+      $dbh->do('SET @num := 0, @animal_id := ""');
+    });
     $cursor = $self->db->resultset('PositionGroup')->search(
-      {},
-      { bind => [$count], }
+      {'me.row_number' => {'<=', $count}}
     );
   }
   else {
@@ -241,9 +244,12 @@ sub lines {
 
   my $cursor;
   if ($self->stash('animal') eq 'all' and $count != 0) {
+    $self->db->storage->dbh_do(sub {
+      my ($storage, $dbh) = @_;
+      $dbh->do('SET @num := 0, @animal_id := ""');
+    });
     $cursor = $self->db->resultset('PositionGroup')->search(
-      {},
-      { bind => [$count], }
+      {'me.row_number' => {'<=', $count}}
     );
   }
   else {

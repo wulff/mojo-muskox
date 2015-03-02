@@ -13,15 +13,11 @@ __PACKAGE__->table('position');
 __PACKAGE__->result_source_instance->is_virtual(1);
 
 __PACKAGE__->result_source_instance->view_definition(q[
-  SET @num := 0, @animal_id := '';
-  SELECT * FROM (
-    SELECT *,
-      @num := IF(@animal_id = animal_id, @num + 1, 1) AS row_number,
-      @animal_id := animal_id AS foo
-    FROM position
-    ORDER BY animal_id, recorded DESC
-  ) AS positions
-  WHERE positions.row_number <= ?;
+  SELECT *,
+    @num := IF(@animal_id = animal_id, @num + 1, 1) AS row_number,
+    @animal_id := animal_id AS foo
+  FROM position
+  ORDER BY animal_id, recorded DESC
 ]);
 
 __PACKAGE__->add_columns(
